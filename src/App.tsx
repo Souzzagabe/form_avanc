@@ -29,8 +29,12 @@ const createUserFormSchema = z.object({
         knoledge: z.coerce.number().min(1).max(100),
       })
     )
-    .min(2, "inisra pelomenos 2 tecnologias"),
+    .min(2, "Pelo menos 2 tecnologias são necessárias")
+    .refine((techs) => {
+      return techs.some(tech => tech.knoledge > 50);
+    }, "Pelo menos uma tecnologia deve ter conhecimento superior a 50"),
 });
+
 
 type CreateUserFormData = z.infer<typeof createUserFormSchema>;
 
@@ -56,7 +60,9 @@ function App() {
 
   const createUser = (data: CreateUserFormData) => {
     setOutput(JSON.stringify(data, null, 2));
+
   };
+
 
   return (
     <main className="h-screen bg-zinc-800 flex items-center justify-center flex-col text-zinc-100 gap-10">
